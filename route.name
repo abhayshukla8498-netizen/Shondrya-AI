@@ -1,0 +1,33 @@
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import Toast from 'react-native-toast-message'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
+const Tab = createBottomTabNavigator()
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName = 'home'
+            if (route.name === 'Editor') iconName = 'sparkles'
+            else if (route.name === 'Gallery') iconName = 'images'
+            else if (route.name === 'Settings') iconName = 'settings'
+            return <Ionicons name={iconName} size={size} color={color} />
+          },
+          tabBarActiveTintColor: '#a855f7',
+          tabBarInactiveTintColor: '#6b7280',
+          tabBarStyle: { backgroundColor: '#111827', borderTopColor: '#6b21a8', paddingBottom: 5 }
+        })}
+      >
+        <Tab.Screen name="Editor" component={() => <></>} />
+        <Tab.Screen name="Gallery" component={() => <></>} />
+        <Tab.Screen name="Settings" component={() => <></>} />
+      </Tab.Navigator>
+      <Toast />
+    </NavigationContainer>
+  )
+}
