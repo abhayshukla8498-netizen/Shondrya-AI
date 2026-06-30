@@ -1,0 +1,49 @@
+name: Build Shondrya AI APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Create local.properties
+      run: echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+    
+    - name: Build APK
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleRelease --no-daemon || true
+    
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: shondrya-ai-release
+        path: android/app/build/outputs/apk/release/
+        retention-days: 30
